@@ -1,0 +1,45 @@
+﻿@{
+    var currentPage = ViewContext.RouteData.Values["page"]?.ToString();
+}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - OneST</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/OneST.Web.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <a class="visually-hidden-focusable" href="#main-content">Skip to content</a>
+<header class="app-header flex-wrap">
+    <a class="app-brand" asp-page="/Index">OneST</a>
+
+    <nav class="app-nav nav align-items-center" aria-label="Services">
+        <a class="nav-link @(currentPage == "/Index" ? "active" : "")"
+           asp-page="/Index"
+           aria-current="@(currentPage == "/Index" ? "page" : null)">
+            UEN validation
+        </a>
+
+        <button class="nav-link" type="button" disabled>
+            Weather forecast
+            <span class="small ms-2">Coming soon</span>
+        </button>
+    </nav>
+</header>
+
+<main id="main-content" class="app-main flex-grow-1" tabindex="-1">
+    <div class="page-content">
+        @RenderBody()
+    </div>
+</main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

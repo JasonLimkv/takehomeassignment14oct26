@@ -54,3 +54,14 @@ codes, invalid lengths, null input, whitespace and Unicode characters.
 
 UEN validation and automated tests are implemented.
 The user interface and weather service are not implemented yet.
+
+## Running the Web Portal in VS Code
+
+1. Open the repository folder and load OneST.slnx.
+2. Press Ctrl+F5 and select OneST.Web if prompted.
+3. Open the local URL shown by the application.
+4. Stop the application with Shift+F5 before rebuilding.
+
+Completed UEN checks use Post/Redirect/Get to avoid repeating
+submissions on refresh. Refresh clears the current result and input;
+the browser-tab history remains available.

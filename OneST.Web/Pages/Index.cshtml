@@ -1,0 +1,50 @@
+﻿@page
+@model OneST.Web.Pages.IndexModel
+@{
+    ViewData["Title"] = "UEN Validation";
+}
+
+<h1 class="h3 mb-4">UEN validation</h1>
+
+<form method="post" class="uen-form mb-4">
+    <label asp-for="Uen" class="form-label">Company UEN</label>
+
+    <div class="d-flex flex-column flex-sm-row gap-2">
+        <input asp-for="Uen"
+               class="form-control"
+               placeholder="e.g. T09LL0001B"
+               autocomplete="off"
+               spellcheck="false"
+               aria-describedby="uen-help uen-error" />
+
+        <button type="submit" class="btn btn-primary flex-shrink-0">
+            Validate
+        </button>
+    </div>
+
+    <span asp-validation-for="Uen"
+          id="uen-error"
+          class="text-danger d-block mt-1"></span>
+
+    <p id="uen-help" class="small text-body-secondary mt-2">
+        Format check only. Registration and check letter are not verified.
+    </p>
+
+    @if (Model.IsValidUen.HasValue)
+    {
+        <div class="alert @(Model.IsValidUen.Value ? "alert-success" : "alert-danger")"
+             role="status">
+            @(Model.IsValidUen.Value
+                ? "Valid UEN format."
+                : "Invalid UEN format.")
+        </div>
+    }
+</form>
+<section id="uen-history" class="mt-4 pt-4 border-top"
+         aria-labelledby="history-heading"
+         data-uen="@Model.Uen"
+         data-valid="@(Model.IsValidUen.HasValue ? (Model.IsValidUen.Value ? "true" : "false") : "")">
+    <h2 id="history-heading" class="h6 mb-3">Last 10 checks</h2>
+    <p id="history-empty" class="small text-body-secondary">No checks yet.</p>
+    <ol id="history-list" class="list-unstyled mb-0"></ol>
+</section>

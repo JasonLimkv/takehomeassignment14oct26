@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="OneST.test/OneST.test.csproj" />
+  <Project Path="OneST.Web/OneST.Web.csproj" />
   <Project Path="OneST/OneST.csproj" />
 </Solution>

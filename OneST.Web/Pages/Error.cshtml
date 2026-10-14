@@ -1,0 +1,18 @@
+﻿@page
+@model ErrorModel
+@{
+    ViewData["Title"] = "Something went wrong";
+}
+
+<h1 class="h3 mb-3">Something went wrong</h1>
+
+<p>We couldn't complete your request. Please try again.</p>
+
+@if (Model.ShowRequestId)
+{
+    <p class="small text-body-secondary">
+        Reference: <code class="text-break">@Model.RequestId</code>
+    </p>
+}
+
+<a asp-page="/Index">Return to UEN validation</a>
