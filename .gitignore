@@ -1,0 +1,11 @@
+# Generated build files
+**/bin/
+**/obj/
+
+# Generated test results
+**/TestResults/
+
+# Local IDE files
+.vs/
+*.user
+*.suo
