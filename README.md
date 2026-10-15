@@ -1,6 +1,5 @@
-# OneST Take-Home Assignment
-
-A C# implementation of the UEN format-validation service.
+A C# ASP.NET Core Razor Pages portal providing UEN format
+validation and Singapore two-hour weather forecasts.
 
 ## Requirements
 
@@ -9,9 +8,10 @@ A C# implementation of the UEN format-validation service.
 
 ## Project Structure
 
-- OneST: reusable UEN validation logic.
+- OneST: UEN validation logic, weather service and response models.
+- OneST.Web: Razor Pages web portal.
 - OneST.test: automated xUnit tests.
-- OneST.slnx: solution containing both projects.
+- OneST.slnx: solution containing all three projects.
 
 ## UEN Validation
 
@@ -52,8 +52,15 @@ codes, invalid lengths, null input, whitespace and Unicode characters.
 
 ## Current Scope
 
-UEN validation and automated tests are implemented.
-The user interface and weather service are not implemented yet.
+- UEN format validation through the web portal.
+- Singapore two-hour forecasts from NEA via data.gov.sg.
+- Location selection populated from the weather response.
+- Forecast results update without reloading the whole page.
+- Forecast validity times display in Singapore time.
+- Unavailable or expired forecast data produces a friendly error.
+
+Weather requires an internet connection and JavaScript.
+Navigation between services still loads a new page.
 
 ## Running the Web Portal in VS Code
 
@@ -62,6 +69,8 @@ The user interface and weather service are not implemented yet.
 3. Open the local URL shown by the application.
 4. Stop the application with Shift+F5 before rebuilding.
 
-Completed UEN checks use Post/Redirect/Get to avoid repeating
-submissions on refresh. Refresh clears the current result and input;
-the browser-tab history remains available.
+UEN validation currently uses a normal form POST, so refreshing
+after submission may prompt the browser to resubmit.
+
+Weather requests use JavaScript fetch and return JSON.
+The selected location is preserved in the URL.

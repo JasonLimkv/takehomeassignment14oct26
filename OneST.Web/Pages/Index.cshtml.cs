@@ -21,28 +21,4 @@ public class IndexModel : PageModel
 
         return Page();
     }
-
-    public IActionResult OnPostValidate()
-    {
-        if (!ModelState.IsValid)
-        {
-            var error = ModelState.Values
-                .SelectMany(value => value.Errors)
-                .FirstOrDefault()?.ErrorMessage;
-
-            return new JsonResult(new
-            {
-                error = error ?? "Check your input."
-            })
-            {
-                StatusCode = 400
-            };
-        }
-
-        return new JsonResult(new
-        {
-            uen = Uen!.Trim(),
-            valid = UenValidator.IsValid(Uen)
-        });
-    }
 }
