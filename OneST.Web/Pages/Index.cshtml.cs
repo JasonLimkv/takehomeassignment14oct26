@@ -9,13 +9,16 @@ public class IndexModel : PageModel
 {
     [BindProperty]
     [Required(ErrorMessage = "Enter a UEN.")]
-    [StringLength(100, ErrorMessage = "Enter no more than 100 characters.")]
     public string? Uen { get; set; }
 
     public bool? IsValidUen { get; private set; }
 
     public IActionResult OnPost()
     {
+        Uen = Uen?.Trim();
+        if (Uen?.Length > 10)
+            ModelState.AddModelError(nameof(Uen), "Enter no more than 10 characters.");
+            
         if (ModelState.IsValid)
             IsValidUen = UenValidator.IsValid(Uen);
 
