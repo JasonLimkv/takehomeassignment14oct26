@@ -1,76 +1,55 @@
-A C# ASP.NET Core Razor Pages portal providing UEN format
-validation and Singapore two-hour weather forecasts.
+A .NET 10 web portal for Singapore UEN format validation and two-hour weather forecasts.
+
+## Included
+- UEN format validation with the last 10 checks
+- Singapore weather forecasts with an interactive map and searchable locations
+- Responsive web interface
+- Unit tests and HTTP integration tests
+UEN validation checks format only; registration and the correctness of the last letter are not verified
+
+## Projects
+Project | Contents 
+`OneST` | UEN validator and weather service
+`OneST.Web` | Web pages and UI assets
+`OneST.test` | Unit tests
+`OneST.IntegrationTests` | HTTP integration tests
 
 ## Requirements
-
 - .NET 10 SDK
-- Visual Studio Code with C# Dev Kit for the instructions below
+- Visual Studio Code with Microsoft's C# Dev Kit
+- A modern browser with JavaScript enabled
+- NuGet package access or a populated package cache for restore
+- Weather API access from the running application for live forecasts
 
-## Project Structure
+## Run in VS Code
+1. Open the repository root folder
+2. Load `OneST.slnx` when prompted and allow dependencies to restore
+3. Open the Command Palette with **Ctrl+Shift+P**, select **Tasks: Run Build Task**, and choose **dotnet: build** for the solution
+4. Press **Ctrl+F5** and select **OneST.Web** if prompted
+5. Open the URL shown by the application
 
-- OneST: UEN validation logic, weather service and response models.
-- OneST.Web: Razor Pages web portal.
-- OneST.test: automated xUnit tests.
-- OneST.slnx: solution containing all three projects.
+Depending on the selected launch profile, the app runs at:
+- **HTTP:** [localhost:5128](http://localhost:5128)
+- **HTTPS:** [localhost:7138](https://localhost:7138)
 
-## UEN Validation
+Use the address shown when the app starts. HTTPS requires a trusted development certificate
+Use VS Code's **Stop** control to stop the application before rebuilding
 
-Call UenValidator.IsValid(input) to receive a true or false result.
+## Run Tests
+Open the **Testing** sidebar and select **Run All Tests**, or use **Test: Run All Tests** from the Command Palette.
 
-Supported formats:
-- Business: eight digits followed by a letter.
-- Local company: nine digits followed by a letter.
-- Other entity: R, S or T; two year digits; a recognized
-  two-character entity code; four sequence digits; a final letter.
+### Test Summary
+67 automated test cases: 42 unit tests and 25 HTTP integration tests
 
-Entity codes follow the table supplied in the assessment brief.
+- UEN: valid and invalid formats, input length, whitespace, letter case and unsupported characters
+- Weather: forecast data, location selection, expired or future forecasts, API failures, timeouts and cancellation
+- HTTP: page routes, UEN form submissions and weather JSON responses
+- Security: missing or invalid antiforgery tokens, HTML encoding and safe production error messages
+- Map: embedded forecasts and coordinates, local asset references and handling missing data
+Weather responses are simulated, so the tests do not depend on the live weather API. These tests do not run browser JavaScript.
 
-## Input Handling and Assumptions
-
-- Null, empty and whitespace-only input is rejected.
-- Surrounding whitespace is removed.
-- ASCII lowercase letters are accepted and converted to uppercase.
-- Remaining characters must be ASCII letters or digits.
-- Internal whitespace and punctuation are rejected.
-- Year fields are checked as digits, without chronological restrictions.
-- The final character must be a letter, but its checksum is not verified.
-- No registration lookup or issued-sequence verification is performed.
-
-A successful result means the input matches a supported format,
-not that the entity exists.
-
-## Running Tests in VS Code
-
-1. Open the assignment folder and load OneST.slnx.
-2. Open the Command Palette and select Tasks: Run Build Task.
-3. Choose the dotnet: build task for the solution.
-4. Select Test: Run All Tests from the Command Palette.
-5. Review the results in the Testing sidebar.
-
-Tests cover the three formats, supported prefixes, selected entity
-codes, invalid lengths, null input, whitespace and Unicode characters.
-
-## Current Scope
-
-- UEN format validation through the web portal.
-- Singapore two-hour forecasts from NEA via data.gov.sg.
-- Location selection populated from the weather response.
-- Forecast results update without reloading the whole page.
-- Forecast validity times display in Singapore time.
-- Unavailable or expired forecast data produces a friendly error.
-
-Weather requires an internet connection and JavaScript.
-Navigation between services still loads a new page.
-
-## Running the Web Portal in VS Code
-
-1. Open the repository folder and load OneST.slnx.
-2. Press Ctrl+F5 and select OneST.Web if prompted.
-3. Open the local URL shown by the application.
-4. Stop the application with Shift+F5 before rebuilding.
-
-UEN validation currently uses a normal form POST, so refreshing
-after submission may prompt the browser to resubmit.
-
-Weather requests use JavaScript fetch and return JSON.
-The selected location is preserved in the URL.
+## Data Sources
+- **Weather:** [NEA via data.gov.sg](https://data.gov.sg/datasets/d_3f9e064e25005b0e42969944ccaf2e7a/view)
+- **Map:** [URA planning-area boundaries](https://data.gov.sg/datasets/d_2cc750190544007400b2cfd5d7f53209/view)
+- **Data licence:** [Singapore Open Data Licence](https://data.gov.sg/open-data-licence)
+Licence notices for bundled UI assets are included with their files.

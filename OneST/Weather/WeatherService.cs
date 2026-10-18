@@ -4,8 +4,7 @@ namespace OneST.Weather;
 
 public sealed class WeatherService
 {
-    private const string ForecastUrl =
-        "https://api-open.data.gov.sg/v2/real-time/api/two-hr-forecast";
+    private const string ForecastUrl = "https://api-open.data.gov.sg/v2/real-time/api/two-hr-forecast";
 
     private readonly HttpClient _httpClient;
 
@@ -14,27 +13,23 @@ public sealed class WeatherService
         _httpClient = httpClient;
     }
 
-    public async Task<IReadOnlyList<WeatherForecastItem>> GetForecastsAsync(
+    public async Task<WeatherData> GetForecastsAsync(
         CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient
-            .GetFromJsonAsync<WeatherApiResponse>(
-                ForecastUrl, cancellationToken);
+        var response = await _httpClient.GetFromJsonAsync<WeatherApiResponse>(ForecastUrl, cancellationToken);
 
         if (response is null || response.Code != 0)
         {
-            throw new InvalidDataException(
-                "The weather provider returned an unsuccessful response.");
+            throw new InvalidDataException("The weather provider returned an unsuccessful response.");
         }
 
-        var forecasts = response.Data?.Items;
+        var data = response.Data;
 
-        if (forecasts is null || forecasts.Count == 0)
+        if (data?.Items is not { Count: > 0 })
         {
-            throw new InvalidDataException(
-                "The weather provider returned no forecast data.");
+            throw new InvalidDataException("The weather provider returned no forecast data.");
         }
 
-        return forecasts;
+        return data;
     }
 }

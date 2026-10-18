@@ -2,48 +2,91 @@
 @model OneST.Web.Pages.IndexModel
 @{
     ViewData["Title"] = "UEN Validation";
+    var hasInputError = !ViewData.ModelState.IsValid;
+    var resultState = Model.IsValidUen switch
+    {
+        true => "valid",
+        false => "invalid",
+        null when hasInputError => "error",
+        _ => "empty"
+    };
+    var resultHeading = resultState switch
+    {
+        "valid" => "Valid UEN format.",
+        "invalid" => "Invalid UEN format.",
+        "error" => "Check not completed",
+        _ => "Awaiting a check"
+    };
+    var resultIcon = resultState switch
+    {
+        "valid" => "circle-check",
+        "invalid" or "error" => "circle-x",
+        _ => "scan-line"
+    };
+    var resultClass = Model.IsValidUen.HasValue ? (Model.IsValidUen.Value ? "alert-success" : "alert-danger") : "";
 }
 
-<h1 class="h3 mb-4">UEN validation</h1>
+<h1 class="uen-page-heading">UEN validation</h1>
 
-<form method="post" class="uen-form mb-4">
-    <label asp-for="Uen" class="form-label">Company UEN</label>
+<div class="uen-layout">
+    <form method="post" class="uen-form">
+        <h2 class="uen-form-heading">New check</h2>
+        <label asp-for="Uen" class="form-label">Company UEN</label>
 
-    <div class="d-flex flex-column flex-sm-row gap-2">
-        <input asp-for="Uen"
-               class="form-control"
-               placeholder="e.g. T09LL0001B"
-               autocomplete="off"
-               spellcheck="false"
-               aria-describedby="uen-help uen-error" />
+        <div class="uen-input-row">
+            <input asp-for="Uen"
+                   class="form-control"
+                   placeholder="e.g. T09LL0001B"
+                   autocomplete="off"
+                   spellcheck="false"
+                   aria-invalid="@(hasInputError || Model.IsValidUen == false ? "true" : "false")"
+                   aria-describedby="uen-help uen-error" />
 
-        <button type="submit" class="btn btn-primary flex-shrink-0">
-            Validate
-        </button>
-    </div>
-
-    <span asp-validation-for="Uen"
-          id="uen-error"
-          class="text-danger d-block mt-1"></span>
-
-    <p id="uen-help" class="small text-body-secondary mt-2">
-        Format check only. Registration and check letter are not verified.
-    </p>
-
-    @if (Model.IsValidUen.HasValue)
-    {
-        <div class="alert @(Model.IsValidUen.Value ? "alert-success" : "alert-danger")"
-             role="status">
-            @(Model.IsValidUen.Value
-                ? "Valid UEN format."
-                : "Invalid UEN format.")
+            <button type="submit" class="btn btn-primary">Validate</button>
         </div>
-    }
-</form>
-<section id="uen-history" class="mt-4 pt-4 border-top"
-         aria-labelledby="history-heading"
-         data-uen="@Model.Uen"
-         data-valid="@(Model.IsValidUen.HasValue ? (Model.IsValidUen.Value ? "true" : "false") : "")">
+
+        <span asp-validation-for="Uen"
+              id="uen-error"
+              class="text-danger d-block mt-1"></span>
+
+        <p id="uen-help" class="uen-help">
+            Format check only. Registration lookup and verification of the last letter are future improvements.
+        </p>
+    </form>
+
+    <section id="uen-result" class="uen-result" data-state="@resultState" aria-labelledby="uen-result-heading" role="status" aria-atomic="true">
+        <p class="uen-result-label">Validation result</p>
+        <div class="uen-result-body">
+            <svg class="uen-result-icon" width="56" height="56" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="1.5"
+                 stroke-linecap="round" stroke-linejoin="round"
+                 aria-hidden="true" focusable="false">
+                <use href="@Url.Content($"~/images/uen-status.svg#{resultIcon}")"></use>
+            </svg>
+            <h2 id="uen-result-heading" class="@resultClass">@resultHeading</h2>
+            @if (Model.IsValidUen.HasValue)
+            {
+                <p id="uen-result-value">@Model.Uen?.ToUpperInvariant()</p>
+            }
+            else
+            {
+                <p class="uen-result-placeholder">@(hasInputError ? "Input needs attention" : "No UEN submitted")</p>
+            }
+        </div>
+        <dl class="uen-result-details">
+            <div>
+                <dt>Registration</dt>
+                <dd>Future improvement</dd>
+            </div>
+            <div>
+                <dt>Check last letter</dt>
+                <dd>Future improvement</dd>
+            </div>
+        </dl>
+    </section>
+</div>
+
+<section id="uen-history" class="uen-history" aria-labelledby="history-heading" data-uen="@Model.Uen" data-valid="@(Model.IsValidUen.HasValue ? (Model.IsValidUen.Value ? "true" : "false") : "")">
     <h2 id="history-heading" class="h6 mb-3">Last 10 checks</h2>
     <p id="history-empty" class="small text-body-secondary">No checks yet.</p>
     <ol id="history-list" class="list-unstyled mb-0"></ol>

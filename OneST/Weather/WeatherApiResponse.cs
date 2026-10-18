@@ -13,8 +13,28 @@ public sealed class WeatherApiResponse
 
 public sealed class WeatherData
 {
+    [JsonPropertyName("area_metadata")]
+    public List<WeatherAreaMetadata>? AreaMetadata { get; init; }
+
     [JsonPropertyName("items")]
     public List<WeatherForecastItem>? Items { get; init; }
+}
+public sealed class WeatherAreaMetadata
+{
+    [JsonPropertyName("name")]
+    public string? Name { get; init; }
+
+    [JsonPropertyName("label_location")]
+    public WeatherLabelLocation? LabelLocation { get; init; }
+}
+
+public sealed class WeatherLabelLocation
+{
+    [JsonPropertyName("latitude")]
+    public double? Latitude { get; init; }
+
+    [JsonPropertyName("longitude")]
+    public double? Longitude { get; init; }
 }
 
 public sealed class WeatherForecastItem

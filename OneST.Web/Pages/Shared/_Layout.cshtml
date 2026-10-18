@@ -1,37 +1,45 @@
 ﻿@{
     var currentPage = ViewContext.RouteData.Values["page"]?.ToString();
+    var contentClass = currentPage is "/Index" or "/Weather" ? "page-content page-content-wide" : "page-content";
 }
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en" data-bs-theme="light">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - OneST</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
-    <a class="visually-hidden-focusable" href="#main-content">Skip to content</a>
-    <header class="app-header flex-wrap">
-        <a class="app-brand" asp-page="/Index">OneST</a>
-        <nav class="app-nav nav align-items-center" aria-label="Services">
-            <a class="nav-link @(currentPage == "/Index" ? "active" : "")"
-               asp-page="/Index"
-               aria-current="@(currentPage == "/Index" ? "page" : null)">
-                UEN validation
-            </a>
-            <a class="nav-link @(currentPage == "/Weather" ? "active" : "")"
-               asp-page="/Weather"
-               aria-current="@(currentPage == "/Weather" ? "page" : null)">
-                Weather forecast
-            </a>
-        </nav>
+    <a class="visually-hidden-focusable" href="#main-content">
+        Skip to content
+    </a>
+
+    <header class="app-header">
+        <div class="app-header-inner">
+            <a class="app-brand" asp-page="/Index">OneST</a>
+            <nav class="app-nav" aria-label="Services">
+                <a class="nav-link @(currentPage == "/Index" ? "active" : "")"
+                   asp-page="/Index"
+                   aria-current="@(currentPage == "/Index" ? "page" : null)">
+                    UEN validation
+                </a>
+                <a class="nav-link @(currentPage == "/Weather" ? "active" : "")"
+                   asp-page="/Weather"
+                   aria-current="@(currentPage == "/Weather" ? "page" : null)">
+                    Weather forecast
+                </a>
+            </nav>
+        </div>
     </header>
-    <main id="main-content" class="app-main flex-grow-1" tabindex="-1">
-        <div class="page-content">
+
+    <main id="main-content" class="app-main" tabindex="-1">
+        <div class="@contentClass">
             @RenderBody()
         </div>
     </main>
+
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

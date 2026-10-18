@@ -24,8 +24,12 @@ public class WeatherHttpTests
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal("text/html", response.Content.Headers.ContentType?.MediaType);
         using var page = await new HtmlParser().ParseDocumentAsync(await response.Content.ReadAsStringAsync());
-        var option = Assert.IsAssignableFrom<IHtmlOptionElement>(page.QuerySelector("select[name='location'] option[value='Bedok']"));
-        Assert.Equal("Bedok", option.TextContent.Trim());
+        var input = Assert.IsAssignableFrom<IHtmlInputElement>(page.QuerySelector("input[name='location']"));
+        Assert.Equal("combobox", input.GetAttribute("role"));
+        Assert.Equal("list", input.GetAttribute("aria-autocomplete"));
+        Assert.Equal("false", input.GetAttribute("aria-expanded"));
+        Assert.Equal("location-options", input.GetAttribute("aria-controls"));
+        Assert.Equal("Bedok", page.QuerySelector("#location-options [role='option'][data-value='Bedok']")?.TextContent.Trim());
     }
     [Fact]
     public async Task GetForecast_ReturnsJson_WhenLocationIsValid()
@@ -83,8 +87,7 @@ public class WeatherHttpTests
     public async Task GetForecast_ReturnsServiceUnavailable_WhenProviderFails(
         HttpStatusCode providerStatus)
     {
-        await using var factory = new WeatherWebApplicationFactory(
-            () => new HttpResponseMessage(providerStatus));
+        await using var factory = new WeatherWebApplicationFactory(() => new HttpResponseMessage(providerStatus));
         using var client = factory.CreateClient(new WebApplicationFactoryClientOptions
         {
             BaseAddress = new Uri("https://localhost"),
@@ -95,8 +98,7 @@ public class WeatherHttpTests
         Assert.Equal(HttpStatusCode.ServiceUnavailable, response.StatusCode);
         Assert.Equal("application/json", response.Content.Headers.ContentType?.MediaType);
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        Assert.Equal("Weather is temporarily unavailable. Please try again later.",
-            json.RootElement.GetProperty("message").GetString());
+        Assert.Equal("Weather is temporarily unavailable. Please try again later.", json.RootElement.GetProperty("message").GetString());
         Assert.False(json.RootElement.TryGetProperty("forecast", out _));
     }
     private static HttpResponseMessage CreateWeatherResponse()
