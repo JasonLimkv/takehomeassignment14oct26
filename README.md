@@ -36,16 +36,29 @@ Use the address shown when the app starts. HTTPS requires a trusted development 
 Use VS Code's **Stop** control to stop the application before rebuilding
 
 ## Run Tests
-Open the **Testing** sidebar and select **Run All Tests**, or use **Test: Run All Tests** from the Command Palette.
+
+Only trust a project after reviewing its source and deciding you trust the code.
+When opening the folder for the first time, select **Yes, I trust the authors** in the trust prompt. Leave any option to trust the parent folder unchecked.
+If VS Code is already in **Restricted Mode**:
+1. Click **Manage** in the top Restricted Mode banner, or click **Restricted Mode** at the bottom-left of VS Code
+2. Select **Trust** in the Workspace Trust screen and confirm if prompted. Trust only this project folder, not its parent folder
+3. Reload the window if prompted, then wait for C# Dev Kit to load the projects and restore dependencies
+
+Open the **Testing** sidebar using the flask-shaped icon on the left and select **Run All Tests** at the top of the panel.
+
+Alternatively:
+1. Press **Ctrl+Shift+P**
+2. Type `Test: Run All Tests`
+3. Select the command and press **Enter**
 
 ### Test Summary
 67 automated test cases: 42 unit tests and 25 HTTP integration tests
-
 - UEN: valid and invalid formats, input length, whitespace, letter case and unsupported characters
 - Weather: forecast data, location selection, expired or future forecasts, API failures, timeouts and cancellation
 - HTTP: page routes, UEN form submissions and weather JSON responses
 - Security: missing or invalid antiforgery tokens, HTML encoding and safe production error messages
 - Map: embedded forecasts and coordinates, local asset references and handling missing data
+
 Weather responses are simulated, so the tests do not depend on the live weather API. These tests do not run browser JavaScript.
 
 ## Data Sources
