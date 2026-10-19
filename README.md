@@ -9,10 +9,10 @@ UEN validation checks format only; registration and the correctness of the last 
 
 ## Projects
 Project | Contents 
-`OneST` | UEN validator and weather service
-`OneST.Web` | Web pages and UI assets
-`OneST.test` | Unit tests
-`OneST.IntegrationTests` | HTTP integration tests
+- `OneST` | UEN validator and weather service
+- `OneST.Web` | Web pages and UI assets
+- `OneST.test` | Unit tests
+- `OneST.IntegrationTests` | HTTP integration tests
 
 ## Requirements
 - .NET 10 SDK
